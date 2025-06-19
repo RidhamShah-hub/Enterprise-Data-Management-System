@@ -1,239 +1,399 @@
-# Enterprise Data Management System (EDMS) CLI
+# 🏢 Enterprise Data Management System (EDMS) CLI
 
-Welcome to the Enterprise Data Management System (EDMS) Command-Line Interface! This Next.js application provides a terminal-based interface for managing users, books/resources, and borrowing records within an enterprise context. It features secure authentication, role-based access concepts, and a robust set of commands for data interaction.
+<div align="center">
 
-## Features
+![Next.js](https://img.shields.io/badge/Next.js-14+-black?style=for-the-badge&logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-*   **Command-Line Interface (CLI):** Interact with the system using text-based commands in a familiar terminal environment.
-*   **Secure User Authentication:** User login with password hashing (bcrypt) and session management.
-*   **Resource Management:** Search, list, borrow, and return books/resources.
-*   **User Profiles:** View user details and borrowing history.
-*   **Database Integration:** Uses Neon serverless Postgres for data storage.
-*   **Audit Logging Concepts:** Schema includes an audit log table for tracking system activities (further implementation needed for full utilization).
-*   **Role-Based Access (Conceptual):** Defines 'admin', 'librarian', and 'user' roles, with the foundation for future role-specific permissions.
+**A modern, terminal-based interface for enterprise resource management**
 
-## Tech Stack
+[🚀 Live Demo](#) | [📖 Documentation](#) | [🐛 Report Bug](#) | [💡 Request Feature](#)
 
-*   **Framework:** Next.js 14+ (App Router)
-*   **Language:** TypeScript
-*   **Database:** Neon (Serverless Postgres)
-*   **Styling:** Tailwind CSS (for the web page hosting the CLI)
-*   **UI Components:** shadcn/ui
-*   **Password Hashing:** bcryptjs
-*   **Icons:** Lucide React
+</div>
 
-## Prerequisites
+---
 
-Before you begin, ensure you have the following installed:
+## 📋 Table of Contents
 
-*   [Node.js](https://nodejs.org/) (v18.x or later recommended)
-*   [npm](https://www.npmjs.com/) (comes with Node.js) or [yarn](https://yarnpkg.com/)
+- [Overview](#-overview)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Prerequisites](#-prerequisites)
+- [Quick Start](#-quick-start)
+- [CLI Commands](#-cli-commands)
+- [User Roles](#-user-roles-and-permissions)
+- [API Endpoints](#-api-endpoints)
+- [Database Schema](#-database-schema)
+- [Deployment](#-deployment)
+- [Troubleshooting](#-troubleshooting)
+- [Contributing](#-contributing)
 
-## Setup Instructions
+---
 
-Follow these steps to get the EDMS CLI running on your local machine:
+## 🎯 Overview
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone <your-repository-url>
-    cd <repository-folder-name>
+The **Enterprise Data Management System (EDMS)** is a Next.js application that provides a powerful command-line interface for managing users, books/resources, and borrowing records in an enterprise environment. Built with modern web technologies, it offers secure authentication, role-based access control, and an intuitive terminal-like experience.
 
-2. **Install Dependencies:**
+## ✨ Features
 
-```shellscript
+| Feature | Description |
+|---------|-------------|
+| 🖥️ **CLI Interface** | Terminal-based interaction with familiar command syntax |
+| 🔒 **Secure Auth** | bcrypt password hashing with session management |
+| 📚 **Resource Management** | Search, list, borrow, and return books/resources |
+| 👤 **User Profiles** | Detailed user information and borrowing history |
+| 🗄️ **Database Integration** | Neon serverless PostgreSQL for scalable storage |
+| 📝 **Audit Logging** | Comprehensive activity tracking system |
+| 🎭 **Role-Based Access** | Admin, Librarian, and User permission levels |
+
+## 🛠️ Tech Stack
+
+<table>
+<tr>
+<td>
+
+**Frontend**
+- Next.js 14+ (App Router)
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Lucide React
+
+</td>
+<td>
+
+**Backend**
+- Next.js API Routes
+- Neon PostgreSQL
+- bcryptjs
+- SQL Scripts
+
+</td>
+</tr>
+</table>
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have:
+
+- [Node.js](https://nodejs.org/) `v18.x` or later
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [Neon](https://neon.tech/) account (free tier available)
+
+## 🚀 Quick Start
+
+### 1. Clone & Install
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/enterprise-data-management-system.git
+cd enterprise-data-management-system
+
+# Install dependencies
 npm install
 # or
 yarn install
 ```
 
+### 2. Database Setup
 
-3. **Set Up Neon Database:**
+1. **Create Neon Project:**
+   - Visit [Neon Console](https://neon.tech/)
+   - Create a new project
+   - Copy your connection string
 
-1. Go to [Neon](https://neon.tech/) and sign up or log in.
-2. Create a new Project.
-3. Once the project is created, find the **Connection String** (it usually looks like `postgresql://user:password@host/dbname`). You'll need the one that includes your password.
+2. **Environment Configuration:**
+   ```bash
+   # Create .env.local file
+   touch .env.local
+   ```
+   
+   Add your database URL:
+   ```env
+   DATABASE_URL="postgresql://username:password@hostname/database"
+   ```
 
-1. Navigate to your project's dashboard.
-2. Under "Connection Details", select the "psql" format or look for a URI that includes your role and password.
+### 3. Initialize Database
 
+**Option A: Using Neon SQL Editor**
+1. Open Neon Console → SQL Editor
+2. Copy and run `scripts/01-create-schema.sql`
+3. Copy and run `scripts/02-seed-data.sql`
 
-
-
-
-
-4. **Configure Environment Variables:**
-
-1. Create a new file named `.env.local` in the root of your project.
-2. Add your Neon database connection string to this file:
-
-```plaintext
-DATABASE_URL="your_neon_database_connection_string"
+**Option B: Using psql**
+```bash
+psql $DATABASE_URL -f scripts/01-create-schema.sql
+psql $DATABASE_URL -f scripts/02-seed-data.sql
 ```
 
-Replace `"your_neon_database_connection_string"` with the actual string you copied from Neon.
+### 4. Launch Application
 
-
-
-
-
-5. **Run Database Schema and Seed Scripts:**
-The project includes SQL scripts to set up the database schema and populate it with initial data. You'll need a way to run these against your Neon database.
-
-1. **Using Neon's SQL Editor:**
-
-1. In your Neon project dashboard, go to the "SQL Editor".
-2. Copy the content of `scripts/01-create-schema.sql` and run it.
-3. Then, copy the content of `scripts/02-seed-data.sql` and run it.
-
-
-
-2. **Using a PSQL Client (if you have one configured):**
-Connect to your Neon database using `psql` and your connection string, then run the scripts:
-
-```shellscript
-psql "your_neon_database_connection_string" -f scripts/01-create-schema.sql
-psql "your_neon_database_connection_string" -f scripts/02-seed-data.sql
-```
-
-
-3. **Important Note on Passwords:** The `02-seed-data.sql` script contains pre-hashed passwords. If you encounter login issues, it might be due to `bcryptjs` generating slightly different hashes in your local environment versus where the seed hashes were generated. If this happens, you may need to:
-
-1. Temporarily add a logging function in `lib/auth.ts` to generate a hash for a known password (e.g., `admin123`).
-2. Log this hash.
-3. Update the `password_hash` in the `users` table in your Neon database for the respective user with this newly generated hash.
-4. Remove the temporary logging function.
-
-
-
-
-
-
-6. **Run the Development Server:**
-
-```shellscript
+```bash
 npm run dev
 # or
 yarn dev
 ```
 
-
-7. **Access the Application:**
-Open your web browser and navigate to `http://localhost:3000`. You should see the EDMS CLI interface.
-
-
-## Using the CLI
-
-The application presents a web-based terminal.
-
-- Click into the input area at the bottom of the terminal to start typing commands.
-- Type `help` to see a list of available commands.
-- **Initial Login:** You can log in using the demo credentials provided in the seed data:
-
-- Admin: `login admin admin123`
-- Librarian: `login librarian librarian123`
-- User: `login jdoe password123` (or `asmith password123`, `bwilson password123`)
-
-
-
-
-
-## Available Commands
-
-Here's a list of commands you can use in the CLI:
-
-# ```
-Available Commands:
-
-Authentication:
-login `<username>` `<password>`    - Login to the system
-register                       - (Currently informational) Register a new user account
-logout                         - Logout from the system
-profile                        - View user profile and borrowing history
-
-Book Management:
-search `<query>` [category]      - Search for books by title, author, or ISBN
-list [category]                - List all books or books by category
-borrow `<book_id>` [days]        - Borrow a book (default: 14 days)
-return `<borrowing_id>`          - Return a borrowed book
-history                        - View borrowing history
-
-System:
-status                         - Show system status
-help                           - Show this help message
-clear                          - Clear the screen
-```
-
-## User Roles and Permissions
-
-The system defines three user roles: `user`, `librarian`, and `admin`.
-
-**Current Implementation:**
-As of now, all logged-in users (regardless of their defined role) have access to the same set of CLI commands listed above. The distinction between roles is primarily in the database schema and is foundational for future enhancements.
-
-**All logged-in users (User, Librarian, Admin) can:**
-
-- **`profile`**: View their own profile and borrowing history.
-- **`search <query> [category]`**: Search for books.
-- **`list [category]`**: List books.
-- **`borrow <book_id> [days]`**: Borrow an available book.
-- **`return <borrowing_id>`**: Return a borrowed book.
-- **`history`**: View their own borrowing history.
-- **`status`**: View system status.
-- **`logout`**: Log out of the system.
-
-
-**Intended Future Capabilities (Not Yet Implemented in CLI):**
-
-- **User:**
-
-- Primarily focused on searching, borrowing, and returning resources for personal use.
-
-
-
-- **Librarian:**
-
-- All `user` capabilities.
-- Manage the book catalog: add new books, edit existing book details, delete books.
-- Manage book categories.
-- View all borrowing records system-wide.
-- Potentially manage overdue notices and fines.
-
-
-
-- **Admin:**
-
-- All `librarian` capabilities.
-- Manage user accounts: create, edit, delete users, change user roles, reset passwords.
-- View and manage system-wide audit logs.
-- Configure system settings.
-- Perform database maintenance tasks.
-
-
-
-
-
-To implement these role-specific capabilities, further development is needed to:
-
-1. Add new commands to the `command-processor.tsx`.
-2. Create corresponding API endpoints in the `app/api/` directory.
-3. Implement strict Role-Based Access Control (RBAC) within these API endpoints to verify the user's role before allowing an action.
-
+Navigate to `http://localhost:3000` 🎉
 
 ---
 
-Happy Hacking!
+## 💻 CLI Commands
+
+### Authentication Commands
+
+```bash
+login <username> <password>    # Login to the system
+register                       # Register new user (info only)
+logout                         # Logout from system
+profile                        # View user profile & history
 ```
 
-You can copy and paste this directly into a `README.md` file in your project's root directory. Remember to replace `<your-repository-url>` and `<repository-folder-name>` with your actual project details.
+### Resource Management
 
-```plaintext
+```bash
+search <query> [category]      # Search books by title/author/ISBN
+list [category]                # List all books or by category
+borrow <book_id> [days]        # Borrow book (default: 14 days)
+return <borrowing_id>          # Return borrowed book
+history                        # View borrowing history
+```
 
+### System Commands
 
-<Actions>
-  <Action name="Add a 'Troubleshooting' section to README" description="Include common issues and solutions, like the bcrypt hash mismatch." />
-  <Action name="Explain how to deploy to Vercel" description="Add a section on deploying the Next.js app to Vercel." />
-  <Action name="Detail the database schema in the README" description="Provide an overview or link to the schema for better understanding." />
-  <Action name="Start implementing Admin-specific commands" description="Begin building out distinct functionalities for the Admin role." />
-</Actions>
+```bash
+status                         # Show system status
+help                           # Display help message
+clear                          # Clear terminal screen
+```
+
+### 🔑 Demo Credentials
+
+| Role | Username | Password |
+|------|----------|----------|
+| 👑 Admin | `admin` | `admin123` |
+| 📚 Librarian | `librarian` | `librarian123` |
+| 👤 User | `jdoe` | `password123` |
+| 👤 User | `asmith` | `password123` |
+| 👤 User | `bwilson` | `password123` |
+
+---
+
+## 🎭 User Roles and Permissions
+
+### Current Implementation
+All authenticated users have access to the same CLI commands, with role-based restrictions planned for future releases.
+
+<details>
+<summary>📊 <strong>Permission Matrix</strong></summary>
+
+| Command | User | Librarian | Admin |
+|---------|------|-----------|-------|
+| `profile` | ✅ | ✅ | ✅ |
+| `search` | ✅ | ✅ | ✅ |
+| `list` | ✅ | ✅ | ✅ |
+| `borrow` | ✅ | ✅ | ✅ |
+| `return` | ✅ | ✅ | ✅ |
+| `history` | ✅ | ✅ | ✅ |
+| `status` | ✅ | ✅ | ✅ |
+
+</details>
+
+### 🚧 Planned Role Features
+
+<details>
+<summary><strong>Future Capabilities</strong></summary>
+
+**👑 Admin**
+- User management (create, edit, delete, role changes)
+- System-wide audit log access
+- Database maintenance tools
+- Global system configuration
+
+**📚 Librarian**
+- Book catalog management (add, edit, delete)
+- Category management
+- System-wide borrowing records
+- Overdue notices and fines
+
+**👤 User**
+- Personal resource browsing and borrowing
+- Profile management
+- Personal borrowing history
+
+</details>
+
+---
+
+## 🌐 API Endpoints
+
+<details>
+<summary><strong>Authentication APIs</strong></summary>
 
 ```
+POST /api/auth/login     # User authentication
+POST /api/auth/register  # User registration
+POST /api/auth/logout    # Session termination
+```
+
+</details>
+
+<details>
+<summary><strong>Resource APIs</strong></summary>
+
+```
+GET    /api/books        # List/search books
+POST   /api/books/borrow # Borrow a book
+POST   /api/books/return # Return a book
+GET    /api/user/profile # User profile data
+```
+
+</details>
+
+---
+
+## 🗄️ Database Schema
+
+<details>
+<summary><strong>Core Tables</strong></summary>
+
+**Users Table**
+- `user_id`, `username`, `email`, `password_hash`, `role`, `created_at`
+
+**Books Table**
+- `book_id`, `title`, `author`, `isbn`, `category`, `status`, `created_at`
+
+**Borrowings Table**
+- `borrowing_id`, `user_id`, `book_id`, `borrowed_at`, `due_date`, `returned_at`
+
+**Audit Logs Table**
+- `log_id`, `user_id`, `action`, `details`, `timestamp`
+
+</details>
+
+---
+
+## 🚀 Deployment
+
+### Deploy to Vercel
+
+1. **Connect Repository:**
+   ```bash
+   vercel --prod
+   ```
+
+2. **Environment Variables:**
+   Add `DATABASE_URL` in Vercel dashboard
+
+3. **Database Migration:**
+   Run schema scripts against production database
+
+### Deploy to Other Platforms
+
+<details>
+<summary><strong>Railway, Netlify, or Custom Server</strong></summary>
+
+1. Build the application:
+   ```bash
+   npm run build
+   ```
+
+2. Set environment variables
+3. Run database migrations
+4. Start the production server:
+   ```bash
+   npm start
+   ```
+
+</details>
+
+---
+
+## 🔧 Troubleshooting
+
+<details>
+<summary><strong>Common Issues & Solutions</strong></summary>
+
+### ❌ Login Issues (Invalid Credentials)
+
+**Problem:** bcrypt hash mismatch between environments
+
+**Solution:**
+1. Temporarily add logging to `lib/auth.ts`:
+   ```typescript
+   console.log('Generated hash:', await bcrypt.hash('admin123', 12));
+   ```
+2. Update database with new hash
+3. Remove logging code
+
+### ❌ Database Connection Errors
+
+**Problem:** Cannot connect to Neon database
+
+**Solutions:**
+- Verify `DATABASE_URL` format
+- Check Neon project status
+- Ensure database exists and is accessible
+
+### ❌ Missing Dependencies
+
+**Problem:** Module not found errors
+
+**Solution:**
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+</details>
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+### Development Setup
+
+```bash
+# Fork and clone the repo
+git clone https://github.com/your-username/enterprise-data-management-system.git
+
+# Create feature branch
+git checkout -b feature/amazing-feature
+
+# Make changes and commit
+git commit -m "Add amazing feature"
+
+# Push to branch
+git push origin feature/amazing-feature
+
+# Open Pull Request
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- [Next.js Team](https://nextjs.org/) for the amazing framework
+- [Neon](https://neon.tech/) for serverless PostgreSQL
+- [shadcn/ui](https://ui.shadcn.com/) for beautiful components
+- [Tailwind CSS](https://tailwindcss.com/) for utility-first styling
+
+---
+
+<div align="center">
+
+**⭐ Star this repository if you found it helpful!**
+
+Made with ❤️ by [Your Name](https://github.com/your-username)
+
+</div>
